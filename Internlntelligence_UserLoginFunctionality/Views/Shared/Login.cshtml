@@ -1,0 +1,63 @@
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="~/css/login.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="left-section">
+            <img src="~/images/imagetask.jpeg" alt="Illustration">
+        </div>
+        <div class="right-section">
+            <h2>Log in</h2>
+            <p>Enter your user name and password to sign in</p>
+
+            <form id="loginForm" method="post">
+
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter Your Username" required><br>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter Your Password" required><br>
+                <button type="submit">Sign In</button>
+            </form>
+
+            <div class="links">
+                <p id="message"></p>
+                <p>Don't have an account? <a href="javascript:void(0);" id="registerLink">Register here</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+            $(document).ready(function () {
+            $('#loginForm').submit(function (event) {
+                event.preventDefault();
+                var username = $('#username').val();
+                var password = $('#password').val();
+                $.ajax({
+                    url: '/api/accountapi/login',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ UserName: username, Password: password }),
+                    success: function (response) {
+                        alert(response.message);
+                        window.location.href = `/LoginRegister/Welcome?username=${encodeURIComponent(username)}`;
+                    },
+                    error: function (xhr) {
+                        $('#message').text('Invalid username or password').css('color', 'red');
+                    }
+                });
+            });
+        });
+
+        document.getElementById("registerLink").addEventListener("click", function() {
+            window.location.href = '/LoginRegister/register';
+        });
+    </script>
+</body>
+</html>
+        

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="../css/Welcom.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="welcome-container">
+        <h1>Welcome, <span id="userName"></span>!</h1>
+        <p>You have successfully logged in.</p>
+        <button id="logoutButton">Logout</button>
+    </div>
+
+    <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            document.getElementById('userName').textContent = decodeURIComponent(username || 'Guest');
+
+            $('#logoutButton').on('click', function () {
+                $.ajax({
+                    url: '/api/accountapi/logout',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    success: function (response) {
+                        alert(response.message);
+                        window.location.href = '/LoginRegister/Login';
+                    },
+                    error: function (xhr) {
+                        alert('Logout failed');
+                    }
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="~/css/register.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="register-container">
+        <div class="left-section">
+            <img src="~/images/imagetask.jpeg" alt="Illustration">
+        </div>
+        <div class="right-section">
+            <h2>Register a new account</h2>
+            <p>Enter your details to create an account</p>
+            
+            <form id="registerForm" method="post">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Username" required><br>
+
+                <label for="email">Email</label>
+                <input type="text" id="email" placeholder="Email" required><br>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Password" required><br>
+
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required><br>
+
+                <button type="submit">Register</button>
+            </form>
+            
+            <div class="links">
+                <p>Do you have an account? <a href="login">Login here</a></p>
+            </div>
+            <p id="message"></p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#registerForm').submit(function (event) {
+                event.preventDefault();
+
+                var username = $('#username').val();
+                var email = $('#email').val();
+                var password = $('#password').val();
+                var confirmpassword = $('#confirmPassword').val();
+
+                
+                if (!username || !email || !password || !confirmpassword) {
+                    $('#message').text('Please fill in all fields.').css('color', 'red');
+                    return;
+                }
+
+                
+                $.ajax({
+                    url: '/api/accountapi/register',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ username: username, email: email, password: password, confirmPassword: confirmpassword }),
+                    success: function (response) {
+                        $('#message').text(response.message).css('color', 'green');
+                    },
+                    error: function (xhr) {
+                        var errorMessage = 'An error occurred, please try again.';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            errorMessage = xhr.responseJSON.errors.join(', ');
+                        }
+                        $('#message').text(errorMessage).css('color', 'red');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
